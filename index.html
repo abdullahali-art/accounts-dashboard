@@ -333,6 +333,7 @@ function collectedBadge(c) {
 // ── Table ────────────────────────────────────────────────────────────────────
 const COLS = [
   { key: 'studentName',      label: 'Student'      },
+  { key: 'contactEmail',     label: 'Email'         },
   { key: 'program',          label: 'Program'       },
   { key: 'stageName',        label: 'Stage'         },
   { key: 'type',             label: 'Type'          },
@@ -367,6 +368,7 @@ function renderTable(rows) {
     const outCls  = r.amountOutstanding === 0 ? 'green' : (overdue ? 'red' : '');
     return `<tr${overdue ? ' style="background:#fff7f7"' : ''}>
       <td><span class="cell-name">${esc(r.studentName)}</span></td>
+      <td style="color:#6b7280">${r.contactEmail ? `<a href="mailto:${esc(r.contactEmail)}" style="color:#2563eb;text-decoration:none">${esc(r.contactEmail)}</a>` : '—'}</td>
       <td><span class="cell-program">${esc(r.program)}</span></td>
       <td><span class="badge-stage">${esc(r.stageName)}</span></td>
       <td>${esc(r.type)}</td>
@@ -389,7 +391,7 @@ function renderTable(rows) {
 function exportCSV() {
   const headers = COLS.map(c => c.label).concat(['Opportunity ID']);
   const rows = allRows.map(r =>
-    [r.studentName, r.program, r.stageName, r.type, r.no, r.dueDate,
+    [r.studentName, r.contactEmail, r.program, r.stageName, r.type, r.no, r.dueDate,
      r.amount, r.amountPaid, r.amountOutstanding, r.status,
      r.collectedBy, r.xeroInvoiceId, r.oppId]
   );
