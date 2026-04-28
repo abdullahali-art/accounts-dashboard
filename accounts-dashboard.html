@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accounts Dashboard — The Migration</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; font-size: 13px; min-height: 100vh; }
+
+    /* ── Header ── */
+    .header { background: #1a1a2e; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .header-left h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+    .header-left .meta { font-size: 11px; color: #8892a4; margin-top: 3px; }
+    .header-right { display: flex; gap: 8px; align-items: center; }
+
+    /* ── Buttons ── */
+    .btn { padding: 7px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.15s; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    .btn-primary:disabled { background: #6b7280; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: #d1d5db; border: 1px solid #374151; }
+    .btn-ghost:hover { background: #374151; }
+    .btn-sm { padding: 5px 12px; font-size: 11px; }
+    .btn-outline { background: white; color: #374151; border: 1px solid #d1d5db; }
+    .btn-outline:hover { background: #f9fafb; }
+
+    /* ── Filters ── */
+    .filters { background: white; padding: 12px 24px; border-bottom: 1px solid #e5e7eb; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 10px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    select, input[type="text"], input[type="date"] {
+      padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px;
+      font-size: 12px; color: #374151; background: white; outline: none;
+      transition: border-color 0.15s;
+    }
+    select:focus, input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+    input[type="text"] { width: 200px; }
+    input[type="date"] { width: 130px; }
+
+    /* ── Metrics ── */
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 18px 24px; }
+    .metric { background: white; border-radius: 10px; padding: 16px 18px; border: 1px solid #e5e7eb; }
+    .metric .label { font-size: 10px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; }
+    .metric .value { font-size: 22px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px; }
+    .metric .sub { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+    .m-blue .value { color: #2563eb; }
+    .m-green .value { color: #059669; }
+    .m-red .value { color: #dc2626; }
+    .m-amber .value { color: #d97706; }
+
+    /* ── Table area ── */
+    .table-wrap { margin: 0 24px 28px; background: white; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
+    .table-toolbar { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .table-toolbar .count { font-size: 12px; color: #6b7280; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead { position: sticky; top: 49px; z-index: 10; }
+    th {
+      background: #f9fafb; padding: 9px 12px; text-align: left;
+      font-size: 10px; font-weight: 700; color: #6b7280;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #e5e7eb;
+      cursor: pointer; white-space: nowrap; user-select: none;
+    }
+    th:hover { background: #f3f4f6; color: #374151; }
+    th.sorted { color: #1d4ed8; background: #eff6ff; }
+    th .arr { margin-left: 3px; font-size: 9px; opacity: 0.4; }
+    th.sorted .arr { opacity: 1; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    /* ── Badges ── */
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
+    .badge-paid     { background: #d1fae5; color: #065f46; }
+    .badge-partial  { background: #fef3c7; color: #92400e; }
+    .badge-unpaid   { background: #fee2e2; color: #991b1b; }
+    .badge-us         { background: #dbeafe; color: #1e40af; }
+    .badge-university { background: #ede9fe; color: #5b21b6; }
+    .badge-mixed      { background: #fce7f3; color: #9d174d; }
+    .badge-stage { background: #f3f4f6; color: #374151; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+
+    /* ── Cell helpers ── */
+    .cell-name { font-weight: 500; color: #111827; }
+    .cell-program { font-family: 'SF Mono', 'Consolas', monospace; font-size: 11px; color: #6b7280; }
+    .cell-amt { font-variant-numeric: tabular-nums; text-align: right; font-size: 12px; }
+    .cell-amt.red { color: #dc2626; font-weight: 500; }
+    .cell-amt.green { color: #059669; }
+    .cell-invoice { font-family: monospace; font-size: 10px; color: #9ca3af; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ── States ── */
+    .state { text-align: center; padding: 64px 24px; color: #9ca3af; }
+    .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state p { margin-top: 6px; font-size: 12px; }
+    .error-banner { margin: 0 24px 14px; padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Accounts Dashboard</h1>
+    <div class="meta" id="meta">The Migration — live GHL data</div>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-ghost btn-sm" onclick="exportCSV()" id="export-btn" style="display:none">Export CSV</button>
+    <button class="btn btn-primary" id="load-btn" onclick="loadData()">Load Data</button>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="filter-group">
+    <label>Search</label>
+    <input type="text" id="f-search" placeholder="Student name or program…" oninput="applyFilters()">
+  </div>
+  <div class="filter-group">
+    <label>Stage</label>
+    <select id="f-stage" onchange="applyFilters()">
+      <option value="">All Stages</option>
+      <option value="Send Payment Plan">Send Payment Plan</option>
+      <option value="Payment Plan Sent">Payment Plan Sent</option>
+      <option value="Invoicing">Invoicing</option>
+      <option value="Fully Paid">Fully Paid</option>
+      <option value="Discontinued">Discontinued</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Status</label>
+    <select id="f-status" onchange="applyFilters()">
+      <option value="">All Statuses</option>
+      <option value="unpaid">Unpaid</option>
+      <option value="partial">Partial</option>
+      <option value="paid">Paid</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Type</label>
+    <select id="f-type" onchange="applyFilters()">
+      <option value="">All Types</option>
+      <option value="Deposit">Deposit</option>
+      <option value="Installment">Installment</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Collected By</label>
+    <select id="f-collected" onchange="applyFilters()">
+      <option value="">All</option>
+      <option value="us">The Migration (us)</option>
+      <option value="university">University</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Due From</label>
+    <input type="date" id="f-from" onchange="applyFilters()">
+  </div>
+  <div class="filter-group">
+    <label>Due To</label>
+    <input type="date" id="f-to" onchange="applyFilters()">
+  </div>
+  <div class="filter-group">
+    <label>&nbsp;</label>
+    <button class="btn btn-outline btn-sm" onclick="clearFilters()">Clear</button>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="metric m-blue">
+    <div class="label">Total Expected</div>
+    <div class="value" id="m-expected">—</div>
+    <div class="sub" id="m-records">Load data to begin</div>
+  </div>
+  <div class="metric m-green">
+    <div class="label">Total Paid</div>
+    <div class="value" id="m-paid">—</div>
+    <div class="sub" id="m-rate">Collection rate</div>
+  </div>
+  <div class="metric m-red">
+    <div class="label">Outstanding</div>
+    <div class="value" id="m-outstanding">—</div>
+    <div class="sub" id="m-unpaid-count">—</div>
+  </div>
+  <div class="metric m-amber">
+    <div class="label">Overdue</div>
+    <div class="value" id="m-overdue">—</div>
+    <div class="sub">due before today, unpaid</div>
+  </div>
+</div>
+
+<div id="error-area"></div>
+
+<div class="table-wrap">
+  <div class="table-toolbar">
+    <span class="count" id="row-count">—</span>
+  </div>
+  <div id="table-area">
+    <div class="state">Click <strong>Load Data</strong> to fetch live data from GHL.</div>
+  </div>
+</div>
+
+<script>
+const API_URL = 'https://n8n.srv826531.hstgr.cloud/webhook/accounts-dashboard-data';
+const TODAY   = new Date().toISOString().slice(0, 10);
+
+let allRows  = [];
+let sortCol  = 'dueDate';
+let sortDir  = 1;
+
+// ── Formatting ───────────────────────────────────────────────────────────────
+function fmt(v) {
+  return 'A$' + Number(v || 0).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Load ─────────────────────────────────────────────────────────────────────
+async function loadData() {
+  const btn = document.getElementById('load-btn');
+  btn.textContent = 'Loading…';
+  btn.disabled = true;
+  document.getElementById('export-btn').style.display = 'none';
+  document.getElementById('error-area').innerHTML = '';
+  document.getElementById('table-area').innerHTML =
+    '<div class="state"><div class="spinner"></div><strong>Fetching GHL data…</strong><p>This takes 10–30 seconds depending on how many records exist.</p></div>';
+
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status} — ${await res.text()}`);
+    const data = await res.json();
+    allRows = data.rows || [];
+
+    const ts = data.generatedAt
+      ? new Date(data.generatedAt).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })
+      : '';
+    document.getElementById('meta').textContent =
+      `The Migration — ${allRows.length} instalment records — refreshed ${ts}`;
+    document.getElementById('export-btn').style.display = '';
+    applyFilters();
+  } catch (err) {
+    document.getElementById('error-area').innerHTML =
+      `<div class="error-banner"><strong>Error loading data:</strong> ${esc(err.message)}</div>`;
+    document.getElementById('table-area').innerHTML =
+      '<div class="state">Failed to load — see error above.</div>';
+  } finally {
+    btn.textContent = 'Refresh';
+    btn.disabled = false;
+  }
+}
+
+// ── Filter & sort ─────────────────────────────────────────────────────────────
+function applyFilters() {
+  const search    = document.getElementById('f-search').value.toLowerCase();
+  const stage     = document.getElementById('f-stage').value;
+  const status    = document.getElementById('f-status').value;
+  const type      = document.getElementById('f-type').value;
+  const collected = document.getElementById('f-collected').value;
+  const fromDate  = document.getElementById('f-from').value;
+  const toDate    = document.getElementById('f-to').value;
+
+  let rows = allRows.filter(r => {
+    if (search && !r.studentName.toLowerCase().includes(search) && !r.program.toLowerCase().includes(search)) return false;
+    if (stage     && r.stageName    !== stage)     return false;
+    if (status    && r.status       !== status)    return false;
+    if (type      && r.type         !== type)      return false;
+    if (collected && r.collectedBy  !== collected) return false;
+    if (fromDate  && r.dueDate < fromDate)         return false;
+    if (toDate    && r.dueDate > toDate)           return false;
+    return true;
+  });
+
+  rows = sortRows(rows);
+  renderMetrics(rows);
+  renderTable(rows);
+}
+
+function clearFilters() {
+  ['f-search','f-stage','f-status','f-type','f-collected','f-from','f-to']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  applyFilters();
+}
+
+function setSort(col) {
+  if (sortCol === col) sortDir = -sortDir;
+  else { sortCol = col; sortDir = 1; }
+  applyFilters();
+}
+
+function sortRows(rows) {
+  return [...rows].sort((a, b) => {
+    let va = a[sortCol] ?? '';
+    let vb = b[sortCol] ?? '';
+    if (['amount','amountPaid','amountOutstanding'].includes(sortCol)) {
+      va = Number(va); vb = Number(vb);
+    }
+    if (va < vb) return -sortDir;
+    if (va > vb) return sortDir;
+    return 0;
+  });
+}
+
+// ── Metrics ──────────────────────────────────────────────────────────────────
+function renderMetrics(rows) {
+  const expected    = rows.reduce((s, r) => s + (r.amount || 0), 0);
+  const paid        = rows.reduce((s, r) => s + (r.amountPaid || 0), 0);
+  const outstanding = rows.reduce((s, r) => s + (r.amountOutstanding || 0), 0);
+  const unpaidCount = rows.filter(r => r.status !== 'paid').length;
+  const overdueCount= rows.filter(r => r.status !== 'paid' && r.dueDate && r.dueDate < TODAY).length;
+  const rate = expected > 0 ? Math.round((paid / expected) * 10000) / 100 : 0;
+
+  document.getElementById('m-expected').textContent    = fmt(expected);
+  document.getElementById('m-paid').textContent        = fmt(paid);
+  document.getElementById('m-outstanding').textContent = fmt(outstanding);
+  document.getElementById('m-overdue').textContent     = overdueCount;
+  document.getElementById('m-records').textContent     = `${rows.length} record${rows.length !== 1 ? 's' : ''} shown`;
+  document.getElementById('m-rate').textContent        = `${rate}% collection rate`;
+  document.getElementById('m-unpaid-count').textContent= `${unpaidCount} instalment${unpaidCount !== 1 ? 's' : ''} unpaid`;
+}
+
+// ── Badges ───────────────────────────────────────────────────────────────────
+function statusBadge(s) {
+  const map = { paid: 'paid', partial: 'partial', unpaid: 'unpaid' };
+  const cls = map[s] || 'unpaid';
+  return `<span class="badge badge-${cls}">${esc(s)}</span>`;
+}
+function collectedBadge(c) {
+  const map = { us: ['us','The Migration'], university: ['university','University'], mixed: ['mixed','Mixed'] };
+  const [cls, label] = map[c] || ['us', c];
+  return `<span class="badge badge-${cls}">${label}</span>`;
+}
+
+// ── Table ────────────────────────────────────────────────────────────────────
+const COLS = [
+  { key: 'studentName',      label: 'Student'      },
+  { key: 'program',          label: 'Program'       },
+  { key: 'stageName',        label: 'Stage'         },
+  { key: 'type',             label: 'Type'          },
+  { key: 'no',               label: 'No.'           },
+  { key: 'dueDate',          label: 'Due Date'      },
+  { key: 'amount',           label: 'Expected'      },
+  { key: 'amountPaid',       label: 'Paid'          },
+  { key: 'amountOutstanding',label: 'Outstanding'   },
+  { key: 'status',           label: 'Status'        },
+  { key: 'collectedBy',      label: 'Collected By'  },
+  { key: 'xeroInvoiceId',    label: 'Xero Invoice'  },
+];
+
+function renderTable(rows) {
+  document.getElementById('row-count').textContent =
+    `${rows.length} row${rows.length !== 1 ? 's' : ''}`;
+
+  if (!rows.length) {
+    document.getElementById('table-area').innerHTML =
+      '<div class="state">No records match the current filters.</div>';
+    return;
+  }
+
+  const thead = COLS.map(c => {
+    const arr = sortCol === c.key ? (sortDir === 1 ? '▲' : '▼') : '⇅';
+    const cls = sortCol === c.key ? 'sorted' : '';
+    return `<th class="${cls}" onclick="setSort('${c.key}')">${c.label}<span class="arr">${arr}</span></th>`;
+  }).join('');
+
+  const tbody = rows.map(r => {
+    const overdue = r.status !== 'paid' && r.dueDate && r.dueDate < TODAY;
+    const outCls  = r.amountOutstanding === 0 ? 'green' : (overdue ? 'red' : '');
+    return `<tr${overdue ? ' style="background:#fff7f7"' : ''}>
+      <td><span class="cell-name">${esc(r.studentName)}</span></td>
+      <td><span class="cell-program">${esc(r.program)}</span></td>
+      <td><span class="badge-stage">${esc(r.stageName)}</span></td>
+      <td>${esc(r.type)}</td>
+      <td style="text-align:center;color:#6b7280">${esc(r.no)}</td>
+      <td style="white-space:nowrap">${r.dueDate || '—'}${overdue ? ' <span style="color:#dc2626;font-size:10px;font-weight:600">OVERDUE</span>' : ''}</td>
+      <td class="cell-amt">${fmt(r.amount)}</td>
+      <td class="cell-amt">${fmt(r.amountPaid)}</td>
+      <td class="cell-amt ${outCls}">${fmt(r.amountOutstanding)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${collectedBadge(r.collectedBy)}</td>
+      <td><span class="cell-invoice" title="${esc(r.xeroInvoiceId)}">${r.xeroInvoiceId || '—'}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('table-area').innerHTML =
+    `<table><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>`;
+}
+
+// ── CSV export ───────────────────────────────────────────────────────────────
+function exportCSV() {
+  const headers = COLS.map(c => c.label).concat(['Opportunity ID']);
+  const rows = allRows.map(r =>
+    [r.studentName, r.program, r.stageName, r.type, r.no, r.dueDate,
+     r.amount, r.amountPaid, r.amountOutstanding, r.status,
+     r.collectedBy, r.xeroInvoiceId, r.oppId]
+  );
+  const csv = [headers, ...rows]
+    .map(row => row.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `accounts-${TODAY}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
