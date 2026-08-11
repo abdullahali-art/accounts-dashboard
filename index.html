@@ -25,6 +25,11 @@
     .btn-outline { background: white; color: #374151; border: 1px solid #d1d5db; }
     .btn-outline:hover { background: #f9fafb; }
 
+    /* ── View switch ── */
+    .switch { display: inline-flex; background: #0f1020; border: 1px solid #374151; border-radius: 7px; padding: 2px; }
+    .switch button { background: transparent; border: none; color: #9ca3af; font-size: 11px; font-weight: 600; padding: 5px 13px; border-radius: 5px; cursor: pointer; }
+    .switch button.on { background: #3b82f6; color: white; }
+
     /* ── Filters ── */
     .filters { background: white; padding: 12px 24px; border-bottom: 1px solid #e5e7eb; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
     .filter-group { display: flex; flex-direction: column; gap: 4px; }
@@ -35,15 +40,17 @@
       transition: border-color 0.15s;
     }
     select:focus, input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
-    input[type="text"] { width: 200px; }
+    input[type="text"] { width: 220px; }
     input[type="date"] { width: 130px; }
 
     /* ── Metrics ── */
-    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 18px 24px; }
-    .metric { background: white; border-radius: 10px; padding: 16px 18px; border: 1px solid #e5e7eb; }
+    .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 18px 24px; }
+    @media (max-width: 1100px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+    .metric { background: white; border-radius: 10px; padding: 14px 16px; border: 1px solid #e5e7eb; }
     .metric .label { font-size: 10px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; }
-    .metric .value { font-size: 22px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px; }
+    .metric .value { font-size: 21px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px; }
     .metric .sub { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+    .m-slate .value { color: #1a1a2e; }
     .m-blue .value { color: #2563eb; }
     .m-green .value { color: #059669; }
     .m-red .value { color: #dc2626; }
@@ -53,9 +60,9 @@
     .table-wrap { margin: 0 24px 28px; background: white; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
     .table-toolbar { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .table-toolbar .count { font-size: 12px; color: #6b7280; }
+    .scroll-x { overflow-x: auto; }
 
     table { width: 100%; border-collapse: collapse; }
-    thead { position: sticky; top: 49px; z-index: 10; }
     th {
       background: #f9fafb; padding: 9px 12px; text-align: left;
       font-size: 10px; font-weight: 700; color: #6b7280;
@@ -69,7 +76,33 @@
     th.sorted .arr { opacity: 1; }
     td { padding: 9px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
+    tbody tr:hover td { background: #fafafa; }
+
+    /* ── Stage view ── */
+    .stage-card { margin: 0 24px 12px; background: white; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
+    .stage-card.empty { opacity: 0.55; }
+    .stage-head { display: flex; align-items: center; gap: 14px; padding: 12px 16px; cursor: pointer; user-select: none; }
+    .stage-head:hover { background: #fafafa; }
+    .stage-chev { font-size: 10px; color: #9ca3af; width: 12px; flex: none; }
+    .stage-order { width: 22px; height: 22px; flex: none; border-radius: 50%; background: #eef2ff; color: #4338ca; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .stage-name { font-size: 13px; font-weight: 650; color: #111827; }
+    .stage-count { font-size: 11px; color: #6b7280; margin-left: 2px; }
+    .stage-stats { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; justify-content: flex-end; }
+    .stat { text-align: right; }
+    .stat .k { font-size: 9px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .stat .v { font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; margin-top: 1px; }
+    .stat .v.red { color: #dc2626; }
+    .stat .v.green { color: #059669; }
+    .stage-body { border-top: 1px solid #e5e7eb; }
+
+    .opp-row td { cursor: pointer; }
+    .opp-row.open td { background: #f8fafc; }
+    .opp-chev { color: #9ca3af; font-size: 9px; }
+    .inst-panel td { background: #f8fafc; padding: 0 12px 12px 40px; }
+    .inst-panel table { border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; background: white; }
+    .inst-panel th { cursor: default; font-size: 9px; }
+    .inst-panel th:hover { background: #f9fafb; color: #6b7280; }
+    .no-inst { padding: 10px 0 2px; color: #9ca3af; font-size: 11px; }
 
     /* ── Badges ── */
     .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
@@ -80,14 +113,20 @@
     .badge-university { background: #ede9fe; color: #5b21b6; }
     .badge-mixed      { background: #fce7f3; color: #9d174d; }
     .badge-stage { background: #f3f4f6; color: #374151; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+    .badge-plan { background: #ecfdf5; color: #047857; }
+    .badge-noplan { background: #f3f4f6; color: #9ca3af; }
 
     /* ── Cell helpers ── */
     .cell-name { font-weight: 500; color: #111827; }
-    .cell-program { font-family: 'SF Mono', 'Consolas', monospace; font-size: 11px; color: #6b7280; }
-    .cell-amt { font-variant-numeric: tabular-nums; text-align: right; font-size: 12px; }
+    .cell-program { font-size: 12px; color: #374151; }
+    .cell-code { font-family: 'SF Mono', 'Consolas', monospace; font-size: 10px; color: #6b7280; }
+    .cell-amt { font-variant-numeric: tabular-nums; text-align: right; font-size: 12px; white-space: nowrap; }
     .cell-amt.red { color: #dc2626; font-weight: 500; }
     .cell-amt.green { color: #059669; }
-    .cell-invoice { font-family: monospace; font-size: 10px; color: #9ca3af; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cell-invoice { font-family: monospace; font-size: 10px; color: #9ca3af; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+    .muted { color: #9ca3af; }
+    a.mail { color: #2563eb; text-decoration: none; }
+    a.mail:hover { text-decoration: underline; }
 
     /* ── States ── */
     .state { text-align: center; padding: 64px 24px; color: #9ca3af; }
@@ -95,6 +134,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .state p { margin-top: 6px; font-size: 12px; }
     .error-banner { margin: 0 24px 14px; padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; font-size: 12px; }
+    .note-banner { margin: 0 24px 14px; padding: 9px 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; color: #92400e; font-size: 11.5px; }
   </style>
 </head>
 <body>
@@ -105,6 +145,10 @@
     <div class="meta" id="meta">The Migration — live GHL data</div>
   </div>
   <div class="header-right">
+    <div class="switch" id="switch" style="display:none">
+      <button id="v-stages" class="on" onclick="setView('stages')">By Stage</button>
+      <button id="v-rows" onclick="setView('rows')">Instalments</button>
+    </div>
     <button class="btn btn-ghost btn-sm" onclick="exportCSV()" id="export-btn" style="display:none">Export CSV</button>
     <button class="btn btn-primary" id="load-btn" onclick="loadData()">Load Data</button>
   </div>
@@ -113,19 +157,18 @@
 <div class="filters">
   <div class="filter-group">
     <label>Search</label>
-    <input type="text" id="f-search" placeholder="Student name or program…" oninput="applyFilters()">
+    <input type="text" id="f-search" placeholder="Student, email, program offer…" oninput="applyFilters()">
   </div>
   <div class="filter-group">
     <label>Stage</label>
-    <select id="f-stage" onchange="applyFilters()">
-      <option value="">All Stages</option>
-      <option value="Send Payment Plan">Send Payment Plan</option>
-      <option value="Payment Plan Sent">Payment Plan Sent</option>
-      <option value="Invoicing">Invoicing</option>
-      <option value="Paying College">Paying College</option>
-      <option value="Mixed">Mixed</option>
-      <option value="Fully Paid">Fully Paid</option>
-      <option value="Discontinued">Discontinued</option>
+    <select id="f-stage" onchange="applyFilters()"><option value="">All Stages</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Plan</label>
+    <select id="f-plan" onchange="applyFilters()">
+      <option value="">All</option>
+      <option value="yes">Has payment plan</option>
+      <option value="no">No plan yet</option>
     </select>
   </div>
   <div class="filter-group">
@@ -154,6 +197,14 @@
     </select>
   </div>
   <div class="filter-group">
+    <label>Invoice</label>
+    <select id="f-invoice" onchange="applyFilters()">
+      <option value="">All</option>
+      <option value="yes">Has Xero invoice</option>
+      <option value="no">Not invoiced</option>
+    </select>
+  </div>
+  <div class="filter-group">
     <label>Due From</label>
     <input type="date" id="f-from" onchange="applyFilters()">
   </div>
@@ -168,10 +219,15 @@
 </div>
 
 <div class="metrics">
+  <div class="metric m-slate">
+    <div class="label">Opportunities</div>
+    <div class="value" id="m-opps">—</div>
+    <div class="sub" id="m-plans">Load data to begin</div>
+  </div>
   <div class="metric m-blue">
     <div class="label">Total Expected</div>
     <div class="value" id="m-expected">—</div>
-    <div class="sub" id="m-records">Load data to begin</div>
+    <div class="sub" id="m-records">—</div>
   </div>
   <div class="metric m-green">
     <div class="label">Total Paid</div>
@@ -186,36 +242,41 @@
   <div class="metric m-amber">
     <div class="label">Overdue</div>
     <div class="value" id="m-overdue">—</div>
-    <div class="sub">due before today, unpaid</div>
+    <div class="sub" id="m-overdue-count">due before today, unpaid</div>
   </div>
 </div>
 
 <div id="error-area"></div>
-
-<div class="table-wrap">
-  <div class="table-toolbar">
-    <span class="count" id="row-count">—</span>
-  </div>
-  <div id="table-area">
-    <div class="state">Click <strong>Load Data</strong> to fetch live data from GHL.</div>
-  </div>
+<div id="note-area"></div>
+<div id="view-area">
+  <div class="table-wrap"><div class="state">Click <strong>Load Data</strong> to fetch live data from GHL.</div></div>
 </div>
 
 <script>
 const API_URL = 'https://n8n.srv826531.hstgr.cloud/webhook/accounts-dashboard-data';
 const TODAY   = new Date().toISOString().slice(0, 10);
 
-let allRows  = [];
+let DATA     = null;   // full API payload
+let allRows  = [];     // flat instalment rows
+let allStages= [];     // stage-grouped opportunities
+let view     = 'stages';
 let sortCol  = 'dueDate';
 let sortDir  = 1;
+let oppSort  = { col: 'studentName', dir: 1 };
+const openStages = new Set();
+const openOpps   = new Set();
 
 // ── Formatting ───────────────────────────────────────────────────────────────
 function fmt(v) {
   return 'A$' + Number(v || 0).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function fmt0(v) {
+  return 'A$' + Math.round(Number(v || 0)).toLocaleString('en-AU');
 }
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function plural(n, word) { return `${n} ${word}${n !== 1 ? 's' : ''}`; }
 
 // ── Load ─────────────────────────────────────────────────────────────────────
 async function loadData() {
@@ -224,187 +285,503 @@ async function loadData() {
   btn.disabled = true;
   document.getElementById('export-btn').style.display = 'none';
   document.getElementById('error-area').innerHTML = '';
-  document.getElementById('table-area').innerHTML =
-    '<div class="state"><div class="spinner"></div><strong>Fetching GHL data…</strong><p>This takes 10–30 seconds depending on how many records exist.</p></div>';
+  document.getElementById('note-area').innerHTML = '';
+  document.getElementById('view-area').innerHTML =
+    '<div class="table-wrap"><div class="state"><div class="spinner"></div><strong>Fetching GHL data…</strong><p>Pulling the Accounts pipeline and program offers.</p></div></div>';
 
   try {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status} — ${await res.text()}`);
     const data = await res.json();
-    allRows = data.rows || [];
+
+    DATA      = data;
+    allRows   = data.rows || [];
+    allStages = data.stages || [];
+
+    buildStageFilter();
 
     const ts = data.generatedAt
       ? new Date(data.generatedAt).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })
       : '';
+    const s = data.summary || {};
     document.getElementById('meta').textContent =
-      `The Migration — ${allRows.length} instalment records — refreshed ${ts}`;
+      `The Migration — ${s.opportunities ?? '?'} opportunities · ${allRows.length} instalments — refreshed ${ts}`;
+
     document.getElementById('export-btn').style.display = '';
+    document.getElementById('switch').style.display = allStages.length ? '' : 'none';
+    if (!allStages.length) view = 'rows';
+
+    // Open every stage that actually holds something.
+    openStages.clear();
+    allStages.filter(st => st.opportunityCount > 0).forEach(st => openStages.add(st.id));
+
+    const d = data.diagnostics;
+    if (d && (d.parseErrors || d.unresolvedOffers)) {
+      document.getElementById('note-area').innerHTML =
+        `<div class="note-banner">Data notes — ${d.parseErrors || 0} schedule(s) failed to parse, ` +
+        `${d.unresolvedOffers || 0} program offer reference(s) could not be resolved.</div>`;
+    }
+
     applyFilters();
   } catch (err) {
     document.getElementById('error-area').innerHTML =
       `<div class="error-banner"><strong>Error loading data:</strong> ${esc(err.message)}</div>`;
-    document.getElementById('table-area').innerHTML =
-      '<div class="state">Failed to load — see error above.</div>';
+    document.getElementById('view-area').innerHTML =
+      '<div class="table-wrap"><div class="state">Failed to load — see error above.</div></div>';
   } finally {
     btn.textContent = 'Refresh';
     btn.disabled = false;
   }
 }
 
-// ── Filter & sort ─────────────────────────────────────────────────────────────
+function buildStageFilter() {
+  const sel = document.getElementById('f-stage');
+  const keep = sel.value;
+  const names = allStages.length
+    ? allStages.map(st => st.name)
+    : [...new Set(allRows.map(r => r.stageName))].sort();
+  sel.innerHTML = '<option value="">All Stages</option>' +
+    names.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  sel.value = keep;
+}
+
+function setView(v) {
+  view = v;
+  document.getElementById('v-stages').className = v === 'stages' ? 'on' : '';
+  document.getElementById('v-rows').className   = v === 'rows'   ? 'on' : '';
+  applyFilters();
+}
+
+// ── Filtering ────────────────────────────────────────────────────────────────
+function readFilters() {
+  return {
+    search:    document.getElementById('f-search').value.trim().toLowerCase(),
+    stage:     document.getElementById('f-stage').value,
+    plan:      document.getElementById('f-plan').value,
+    status:    document.getElementById('f-status').value,
+    type:      document.getElementById('f-type').value,
+    collected: document.getElementById('f-collected').value,
+    invoice:   document.getElementById('f-invoice').value,
+    fromDate:  document.getElementById('f-from').value,
+    toDate:    document.getElementById('f-to').value,
+  };
+}
+
+// Filters that narrow individual instalments rather than whole opportunities.
+function instalmentFiltersActive(f) {
+  return !!(f.status || f.type || f.collected || f.invoice || f.fromDate || f.toDate);
+}
+
+// Instalment-level only — these narrow rows within an opportunity.
+function rowInstalmentMatch(r, f) {
+  if (f.status    && r.status      !== f.status)    return false;
+  if (f.type      && r.type        !== f.type)      return false;
+  if (f.collected && r.collectedBy !== f.collected) return false;
+  if (f.invoice === 'yes' && !r.xeroInvoiceId)      return false;
+  if (f.invoice === 'no'  &&  r.xeroInvoiceId)      return false;
+  if (f.fromDate  && (!r.dueDate || r.dueDate < f.fromDate)) return false;
+  if (f.toDate    && (!r.dueDate || r.dueDate > f.toDate))   return false;
+  return true;
+}
+
+// Opportunity-level, applied straight to a row. Only used when the API returns
+// no stage data, since otherwise these are decided on the opportunity itself.
+function rowOppMatch(r, f) {
+  if (f.stage && r.stageName !== f.stage) return false;
+  if (f.search) {
+    const hay = [r.studentName, r.contactEmail, r.programOffer, r.program, r.programCode]
+      .join(' ').toLowerCase();
+    if (!hay.includes(f.search)) return false;
+  }
+  return true;
+}
+
+function rowMatches(r, f) { return rowOppMatch(r, f) && rowInstalmentMatch(r, f); }
+
+function oppMatches(o, f) {
+  if (f.stage && o.stageName !== f.stage) return false;
+  if (f.plan === 'yes' && !o.hasPlan)     return false;
+  if (f.plan === 'no'  &&  o.hasPlan)     return false;
+  if (f.search) {
+    const hay = [o.studentName, o.contactEmail, o.programOfferName, o.programCode]
+      .join(' ').toLowerCase();
+    if (!hay.includes(f.search)) return false;
+  }
+  return true;
+}
+
+// Single source of truth for "what is currently visible" — both the render
+// pass and the CSV export read from this, so they can never disagree.
+function computeView(f) {
+  if (!allStages.length) {
+    const rows = sortRows(allRows.filter(r => rowMatches(r, f)));
+    return { rows, stages: null, rowsByOpp: null, oppCount: new Set(rows.map(r => r.oppId)).size };
+  }
+
+  // Opportunity-level filters decide which opportunities survive, and their
+  // instalments come along — otherwise the metrics would count instalments
+  // belonging to opportunities the filter just excluded.
+  let stages = allStages.map(st => ({ ...st, _opps: st.opportunities.filter(o => oppMatches(o, f)) }));
+  const allowed = new Set(stages.flatMap(st => st._opps.map(o => o.oppId)));
+
+  const rows = sortRows(allRows.filter(r => allowed.has(r.oppId) && rowInstalmentMatch(r, f)));
+  const rowsByOpp = {};
+  rows.forEach(r => (rowsByOpp[r.oppId] = rowsByOpp[r.oppId] || []).push(r));
+
+  // With an instalment-level filter on, drop opportunities left with nothing.
+  if (instalmentFiltersActive(f)) {
+    stages = stages.map(st => ({ ...st, _opps: st._opps.filter(o => (rowsByOpp[o.oppId] || []).length > 0) }));
+  }
+
+  return { rows, stages, rowsByOpp, oppCount: stages.reduce((n, st) => n + st._opps.length, 0) };
+}
+
 function applyFilters() {
-  const search    = document.getElementById('f-search').value.toLowerCase();
-  const stage     = document.getElementById('f-stage').value;
-  const status    = document.getElementById('f-status').value;
-  const type      = document.getElementById('f-type').value;
-  const collected = document.getElementById('f-collected').value;
-  const fromDate  = document.getElementById('f-from').value;
-  const toDate    = document.getElementById('f-to').value;
+  if (!DATA) return;
+  const f = readFilters();
+  const { rows, stages, rowsByOpp, oppCount } = computeView(f);
 
-  let rows = allRows.filter(r => {
-    if (search && !r.studentName.toLowerCase().includes(search) && !r.program.toLowerCase().includes(search)) return false;
-    if (stage     && r.stageName    !== stage)     return false;
-    if (status    && r.status       !== status)    return false;
-    if (type      && r.type         !== type)      return false;
-    if (collected && r.collectedBy  !== collected) return false;
-    if (fromDate  && r.dueDate < fromDate)         return false;
-    if (toDate    && r.dueDate > toDate)           return false;
-    return true;
-  });
-
-  rows = sortRows(rows);
-  renderMetrics(rows);
-  renderTable(rows);
+  renderMetrics(rows, oppCount, stages);
+  if (view === 'stages' && stages) renderStages(stages, rowsByOpp, f);
+  else renderRowsTable(rows);
 }
 
 function clearFilters() {
-  ['f-search','f-stage','f-status','f-type','f-collected','f-from','f-to']
+  ['f-search','f-stage','f-plan','f-status','f-type','f-collected','f-invoice','f-from','f-to']
     .forEach(id => { document.getElementById(id).value = ''; });
   applyFilters();
 }
+
+// ── Sorting ──────────────────────────────────────────────────────────────────
+const NUMERIC_ROW_COLS = ['amount','amountPaid','amountOutstanding','no'];
 
 function setSort(col) {
   if (sortCol === col) sortDir = -sortDir;
   else { sortCol = col; sortDir = 1; }
   applyFilters();
 }
+function setOppSort(col) {
+  if (oppSort.col === col) oppSort.dir = -oppSort.dir;
+  else oppSort = { col, dir: 1 };
+  applyFilters();
+}
+
+function cmp(a, b, dir) {
+  if (a < b) return -dir;
+  if (a > b) return dir;
+  return 0;
+}
 
 function sortRows(rows) {
   return [...rows].sort((a, b) => {
     let va = a[sortCol] ?? '';
     let vb = b[sortCol] ?? '';
-    if (['amount','amountPaid','amountOutstanding'].includes(sortCol)) {
-      va = Number(va); vb = Number(vb);
+    if (NUMERIC_ROW_COLS.includes(sortCol)) {
+      // Deposits carry "-" as their number; keep them ahead of instalment 1.
+      va = va === '-' ? -1 : Number(va) || 0;
+      vb = vb === '-' ? -1 : Number(vb) || 0;
     }
-    if (va < vb) return -sortDir;
-    if (va > vb) return sortDir;
-    return 0;
+    // Blank dates sort last rather than first.
+    if (sortCol === 'dueDate') { if (!va) va = '9999'; if (!vb) vb = '9999'; }
+    return cmp(va, vb, sortDir);
+  });
+}
+
+function sortOpps(opps) {
+  const c = oppSort.col;
+  const num = ['expected','paid','outstanding','overdueAmount','installmentCount','invoiced'];
+  return [...opps].sort((a, b) => {
+    let va, vb;
+    if (num.includes(c)) {
+      const pick = o => c === 'installmentCount' ? o.installmentCount
+                     : c === 'invoiced'          ? o.invoices.invoiced
+                     : o.totals[c];
+      va = Number(pick(a)) || 0; vb = Number(pick(b)) || 0;
+    } else {
+      va = String(a[c] ?? '').toLowerCase();
+      vb = String(b[c] ?? '').toLowerCase();
+    }
+    return cmp(va, vb, oppSort.dir);
   });
 }
 
 // ── Metrics ──────────────────────────────────────────────────────────────────
-function renderMetrics(rows) {
+function renderMetrics(rows, oppCount, stages) {
   const expected    = rows.reduce((s, r) => s + (r.amount || 0), 0);
   const paid        = rows.reduce((s, r) => s + (r.amountPaid || 0), 0);
   const outstanding = rows.reduce((s, r) => s + (r.amountOutstanding || 0), 0);
   const unpaidCount = rows.filter(r => r.status !== 'paid').length;
-  const overdueCount= rows.filter(r => r.status !== 'paid' && r.dueDate && r.dueDate < TODAY).length;
-  const rate = expected > 0 ? Math.round((paid / expected) * 10000) / 100 : 0;
+  const overdue     = rows.filter(r => r.status !== 'paid' && r.dueDate && r.dueDate < TODAY);
+  const overdueAmt  = overdue.reduce((s, r) => s + (r.amountOutstanding || 0), 0);
+  const invoiced    = rows.filter(r => r.xeroInvoiceId).length;
+  const rate        = expected > 0 ? Math.round((paid / expected) * 10000) / 100 : 0;
+  const withPlan    = stages ? stages.reduce((n, st) => n + st._opps.filter(o => o.hasPlan).length, 0) : 0;
 
-  document.getElementById('m-expected').textContent    = fmt(expected);
-  document.getElementById('m-paid').textContent        = fmt(paid);
-  document.getElementById('m-outstanding').textContent = fmt(outstanding);
-  document.getElementById('m-overdue').textContent     = overdueCount;
-  document.getElementById('m-records').textContent     = `${rows.length} record${rows.length !== 1 ? 's' : ''} shown`;
-  document.getElementById('m-rate').textContent        = `${rate}% collection rate`;
-  document.getElementById('m-unpaid-count').textContent= `${unpaidCount} instalment${unpaidCount !== 1 ? 's' : ''} unpaid`;
+  document.getElementById('m-opps').textContent         = oppCount;
+  document.getElementById('m-plans').textContent        = `${withPlan} with a payment plan`;
+  document.getElementById('m-expected').textContent     = fmt0(expected);
+  document.getElementById('m-records').textContent      = `${plural(rows.length,'instalment')} · ${invoiced} invoiced`;
+  document.getElementById('m-paid').textContent         = fmt0(paid);
+  document.getElementById('m-rate').textContent         = `${rate}% collection rate`;
+  document.getElementById('m-outstanding').textContent  = fmt0(outstanding);
+  document.getElementById('m-unpaid-count').textContent = `${plural(unpaidCount,'instalment')} unpaid`;
+  document.getElementById('m-overdue').textContent      = fmt0(overdueAmt);
+  document.getElementById('m-overdue-count').textContent= `${plural(overdue.length,'instalment')} past due`;
 }
 
 // ── Badges ───────────────────────────────────────────────────────────────────
 function statusBadge(s) {
-  const map = { paid: 'paid', partial: 'partial', unpaid: 'unpaid' };
-  const cls = map[s] || 'unpaid';
+  const cls = ({ paid: 'paid', partial: 'partial', unpaid: 'unpaid' })[s] || 'unpaid';
   return `<span class="badge badge-${cls}">${esc(s)}</span>`;
 }
 function collectedBadge(c) {
   const map = { us: ['us','The Migration'], university: ['university','University'], mixed: ['mixed','Mixed'] };
   const [cls, label] = map[c] || ['us', c];
-  return `<span class="badge badge-${cls}">${label}</span>`;
+  return `<span class="badge badge-${cls}">${esc(label)}</span>`;
+}
+function emailCell(e) {
+  return e ? `<a class="mail" href="mailto:${esc(e)}">${esc(e)}</a>` : '<span class="muted">—</span>';
+}
+function programCell(name, code) {
+  if (!name && !code) return '<span class="muted">—</span>';
+  return `<div class="cell-program">${esc(name || '—')}</div>` +
+         (code ? `<div class="cell-code">${esc(code)}</div>` : '');
 }
 
-// ── Table ────────────────────────────────────────────────────────────────────
-const COLS = [
+// ── Stage view ───────────────────────────────────────────────────────────────
+const OPP_COLS = [
   { key: 'studentName',      label: 'Student'      },
-  { key: 'contactEmail',     label: 'Email'         },
-  { key: 'program',          label: 'Program'       },
-  { key: 'stageName',        label: 'Stage'         },
-  { key: 'type',             label: 'Type'          },
-  { key: 'no',               label: 'No.'           },
-  { key: 'dueDate',          label: 'Due Date'      },
-  { key: 'amount',           label: 'Expected'      },
-  { key: 'amountPaid',       label: 'Paid'          },
-  { key: 'amountOutstanding',label: 'Outstanding'   },
-  { key: 'status',           label: 'Status'        },
-  { key: 'collectedBy',      label: 'Collected By'  },
-  { key: 'xeroInvoiceId',    label: 'Xero Invoice'  },
+  { key: 'contactEmail',     label: 'Email'        },
+  { key: 'programOfferName', label: 'Program Offer'},
+  { key: 'paymentModel',     label: 'Model'        },
+  { key: 'installmentCount', label: 'Inst.'        },
+  { key: 'invoiced',         label: 'Invoiced'     },
+  { key: 'nextDueDate',      label: 'Next Due'     },
+  { key: 'expected',         label: 'Expected'     },
+  { key: 'paid',             label: 'Paid'         },
+  { key: 'outstanding',      label: 'Outstanding'  },
+  { key: 'overdueAmount',    label: 'Overdue'      },
 ];
 
-function renderTable(rows) {
-  document.getElementById('row-count').textContent =
-    `${rows.length} row${rows.length !== 1 ? 's' : ''}`;
+function toggleStage(id) {
+  openStages.has(id) ? openStages.delete(id) : openStages.add(id);
+  applyFilters();
+}
+function toggleOpp(id, ev) {
+  if (ev) ev.stopPropagation();
+  openOpps.has(id) ? openOpps.delete(id) : openOpps.add(id);
+  applyFilters();
+}
 
+function stageTotals(opps) {
+  return opps.reduce((a, o) => {
+    a.expected += o.totals.expected; a.paid += o.totals.paid;
+    a.outstanding += o.totals.outstanding; a.overdueAmount += o.totals.overdueAmount;
+    a.overdueCount += o.totals.overdueCount;
+    a.invoiced += o.invoices.invoiced; a.notInvoiced += o.invoices.notInvoiced;
+    return a;
+  }, { expected:0, paid:0, outstanding:0, overdueAmount:0, overdueCount:0, invoiced:0, notInvoiced:0 });
+}
+
+function renderStages(stages, rowsByOpp, f) {
+  const visible = stages.filter(st => st._opps.length > 0 || !f.stage);
+  if (!visible.some(st => st._opps.length)) {
+    document.getElementById('view-area').innerHTML =
+      '<div class="table-wrap"><div class="state">No opportunities match the current filters.</div></div>';
+    return;
+  }
+
+  document.getElementById('view-area').innerHTML = visible.map(st => {
+    const opps  = sortOpps(st._opps);
+    const t     = stageTotals(opps);
+    const open  = openStages.has(st.id) && opps.length > 0;
+    const inv   = t.invoiced + t.notInvoiced;
+
+    const head = `
+      <div class="stage-head" onclick="toggleStage('${esc(st.id)}')">
+        <span class="stage-chev">${opps.length ? (open ? '▼' : '▶') : '·'}</span>
+        <span class="stage-order">${st.order}</span>
+        <span>
+          <span class="stage-name">${esc(st.name)}</span>
+          <span class="stage-count">— ${plural(opps.length, 'opportunity').replace('opportunitys','opportunities')}</span>
+        </span>
+        <span class="stage-stats">
+          <span class="stat"><div class="k">Expected</div><div class="v">${fmt0(t.expected)}</div></span>
+          <span class="stat"><div class="k">Paid</div><div class="v green">${fmt0(t.paid)}</div></span>
+          <span class="stat"><div class="k">Outstanding</div><div class="v">${fmt0(t.outstanding)}</div></span>
+          <span class="stat"><div class="k">Overdue</div><div class="v ${t.overdueAmount ? 'red' : ''}">${fmt0(t.overdueAmount)}</div></span>
+          <span class="stat"><div class="k">Invoiced</div><div class="v">${inv ? `${t.invoiced}/${inv}` : '—'}</div></span>
+        </span>
+      </div>`;
+
+    if (!open) return `<div class="stage-card${opps.length ? '' : ' empty'}">${head}</div>`;
+
+    const thead = OPP_COLS.map(c => {
+      const on  = oppSort.col === c.key;
+      const arr = on ? (oppSort.dir === 1 ? '▲' : '▼') : '⇅';
+      return `<th class="${on ? 'sorted' : ''}" onclick="setOppSort('${c.key}')">${c.label}<span class="arr">${arr}</span></th>`;
+    }).join('');
+
+    const body = opps.map(o => {
+      const isOpen = openOpps.has(o.oppId);
+      const oRows  = rowsByOpp[o.oppId] || [];
+      const inv2   = o.invoices.invoiced + o.invoices.notInvoiced;
+      const main = `
+        <tr class="opp-row ${isOpen ? 'open' : ''}" onclick="toggleOpp('${esc(o.oppId)}', event)">
+          <td>
+            <span class="opp-chev">${o.hasPlan ? (isOpen ? '▼' : '▶') : '·'}</span>
+            <span class="cell-name">${esc(o.studentName) || '<span class="muted">(no name)</span>'}</span>
+            ${o.hasPlan ? '' : ' <span class="badge badge-noplan">no plan</span>'}
+          </td>
+          <td>${emailCell(o.contactEmail)}</td>
+          <td>${programCell(o.programOfferName, o.programCode)}</td>
+          <td>${o.paymentModel ? collectedBadge(o.paymentModel) : '<span class="muted">—</span>'}</td>
+          <td style="text-align:center">${o.installmentCount || '<span class="muted">—</span>'}</td>
+          <td style="text-align:center">${inv2 ? `${o.invoices.invoiced}/${inv2}` : '<span class="muted">—</span>'}</td>
+          <td style="white-space:nowrap">${o.nextDueDate ? esc(o.nextDueDate) + (o.nextDueDate < TODAY ? ' <span style="color:#dc2626;font-size:9px;font-weight:700">OVERDUE</span>' : '') : '<span class="muted">—</span>'}</td>
+          <td class="cell-amt">${o.totals.expected ? fmt(o.totals.expected) : '<span class="muted">—</span>'}</td>
+          <td class="cell-amt green">${o.totals.paid ? fmt(o.totals.paid) : '<span class="muted">—</span>'}</td>
+          <td class="cell-amt">${o.totals.outstanding ? fmt(o.totals.outstanding) : '<span class="muted">—</span>'}</td>
+          <td class="cell-amt ${o.totals.overdueAmount ? 'red' : ''}">${o.totals.overdueAmount ? fmt(o.totals.overdueAmount) : '<span class="muted">—</span>'}</td>
+        </tr>`;
+      if (!isOpen) return main;
+      return main + `
+        <tr class="inst-panel"><td colspan="${OPP_COLS.length}">
+          ${oRows.length ? instalmentTable(oRows) : '<div class="no-inst">No instalments match the current filters.</div>'}
+        </td></tr>`;
+    }).join('');
+
+    return `<div class="stage-card">${head}
+      <div class="stage-body scroll-x">
+        <table><thead><tr>${thead}</tr></thead><tbody>${body}</tbody></table>
+      </div></div>`;
+  }).join('');
+}
+
+function instalmentTable(rows) {
+  const head = ['Type','No.','Due Date','Expected','Paid','Outstanding','Status','Collected By','Xero Invoice']
+    .map(h => `<th>${h}</th>`).join('');
+  const body = [...rows]
+    .sort((a, b) => cmp(a.dueDate || '9999', b.dueDate || '9999', 1))
+    .map(r => {
+      const overdue = r.status !== 'paid' && r.dueDate && r.dueDate < TODAY;
+      return `<tr${overdue ? ' style="background:#fff7f7"' : ''}>
+        <td>${esc(r.type)}</td>
+        <td style="text-align:center;color:#6b7280">${esc(r.no)}</td>
+        <td style="white-space:nowrap">${esc(r.dueDate) || '—'}${overdue ? ' <span style="color:#dc2626;font-size:9px;font-weight:700">OVERDUE</span>' : ''}</td>
+        <td class="cell-amt">${fmt(r.amount)}</td>
+        <td class="cell-amt">${fmt(r.amountPaid)}</td>
+        <td class="cell-amt ${r.amountOutstanding === 0 ? 'green' : (overdue ? 'red' : '')}">${fmt(r.amountOutstanding)}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td>${collectedBadge(r.collectedBy)}</td>
+        <td>${r.xeroInvoiceId ? `<span class="cell-invoice" title="${esc(r.xeroInvoiceId)}">${esc(r.xeroInvoiceId)}</span>` : '<span class="muted">not invoiced</span>'}</td>
+      </tr>`;
+    }).join('');
+  return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+// ── Flat instalment view ─────────────────────────────────────────────────────
+const COLS = [
+  { key: 'studentName',      label: 'Student'      },
+  { key: 'contactEmail',     label: 'Email'        },
+  { key: 'programOffer',     label: 'Program Offer'},
+  { key: 'stageName',        label: 'Stage'        },
+  { key: 'type',             label: 'Type'         },
+  { key: 'no',               label: 'No.'          },
+  { key: 'dueDate',          label: 'Due Date'     },
+  { key: 'amount',           label: 'Expected'     },
+  { key: 'amountPaid',       label: 'Paid'         },
+  { key: 'amountOutstanding',label: 'Outstanding'  },
+  { key: 'status',           label: 'Status'       },
+  { key: 'collectedBy',      label: 'Collected By' },
+  { key: 'xeroInvoiceId',    label: 'Xero Invoice' },
+];
+
+function renderRowsTable(rows) {
   if (!rows.length) {
-    document.getElementById('table-area').innerHTML =
-      '<div class="state">No records match the current filters.</div>';
+    document.getElementById('view-area').innerHTML =
+      '<div class="table-wrap"><div class="table-toolbar"><span class="count">0 rows</span></div>' +
+      '<div class="state">No records match the current filters.</div></div>';
     return;
   }
 
   const thead = COLS.map(c => {
-    const arr = sortCol === c.key ? (sortDir === 1 ? '▲' : '▼') : '⇅';
-    const cls = sortCol === c.key ? 'sorted' : '';
-    return `<th class="${cls}" onclick="setSort('${c.key}')">${c.label}<span class="arr">${arr}</span></th>`;
+    const on  = sortCol === c.key;
+    const arr = on ? (sortDir === 1 ? '▲' : '▼') : '⇅';
+    return `<th class="${on ? 'sorted' : ''}" onclick="setSort('${c.key}')">${c.label}<span class="arr">${arr}</span></th>`;
   }).join('');
 
   const tbody = rows.map(r => {
     const overdue = r.status !== 'paid' && r.dueDate && r.dueDate < TODAY;
     const outCls  = r.amountOutstanding === 0 ? 'green' : (overdue ? 'red' : '');
     return `<tr${overdue ? ' style="background:#fff7f7"' : ''}>
-      <td><span class="cell-name">${esc(r.studentName)}</span></td>
-      <td style="color:#6b7280">${r.contactEmail ? `<a href="mailto:${esc(r.contactEmail)}" style="color:#2563eb;text-decoration:none">${esc(r.contactEmail)}</a>` : '—'}</td>
-      <td><span class="cell-program">${esc(r.program)}</span></td>
+      <td><span class="cell-name">${esc(r.studentName) || '<span class="muted">(no name)</span>'}</span></td>
+      <td>${emailCell(r.contactEmail)}</td>
+      <td>${programCell(r.programOffer, r.programCode)}</td>
       <td><span class="badge-stage">${esc(r.stageName)}</span></td>
       <td>${esc(r.type)}</td>
       <td style="text-align:center;color:#6b7280">${esc(r.no)}</td>
-      <td style="white-space:nowrap">${r.dueDate || '—'}${overdue ? ' <span style="color:#dc2626;font-size:10px;font-weight:600">OVERDUE</span>' : ''}</td>
+      <td style="white-space:nowrap">${esc(r.dueDate) || '—'}${overdue ? ' <span style="color:#dc2626;font-size:10px;font-weight:600">OVERDUE</span>' : ''}</td>
       <td class="cell-amt">${fmt(r.amount)}</td>
       <td class="cell-amt">${fmt(r.amountPaid)}</td>
       <td class="cell-amt ${outCls}">${fmt(r.amountOutstanding)}</td>
       <td>${statusBadge(r.status)}</td>
       <td>${collectedBadge(r.collectedBy)}</td>
-      <td><span class="cell-invoice" title="${esc(r.xeroInvoiceId)}">${r.xeroInvoiceId || '—'}</span></td>
+      <td>${r.xeroInvoiceId ? `<span class="cell-invoice" title="${esc(r.xeroInvoiceId)}">${esc(r.xeroInvoiceId)}</span>` : '<span class="muted">—</span>'}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('table-area').innerHTML =
-    `<table><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>`;
+  document.getElementById('view-area').innerHTML =
+    `<div class="table-wrap">
+       <div class="table-toolbar"><span class="count">${plural(rows.length,'row')}</span></div>
+       <div class="scroll-x"><table><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>
+     </div>`;
 }
 
-// ── CSV export ───────────────────────────────────────────────────────────────
-function exportCSV() {
-  const headers = COLS.map(c => c.label).concat(['Opportunity ID']);
-  const rows = allRows.map(r =>
-    [r.studentName, r.contactEmail, r.program, r.stageName, r.type, r.no, r.dueDate,
-     r.amount, r.amountPaid, r.amountOutstanding, r.status,
-     r.collectedBy, r.xeroInvoiceId, r.oppId]
-  );
+// ── CSV export — always exports exactly what the current view shows ──────────
+function toCSV(headers, rows, filename) {
   const csv = [headers, ...rows]
     .map(row => row.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(','))
     .join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = `accounts-${TODAY}.csv`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = filename;
   a.click();
+}
+
+function exportCSV() {
+  if (!DATA) return;
+  const f = readFilters();
+  const { rows, stages } = computeView(f);
+
+  if (view === 'rows' || !stages) {
+    toCSV(
+      COLS.map(c => c.label).concat(['Program Code','Opportunity ID']),
+      rows.map(r => [r.studentName, r.contactEmail, r.programOffer, r.stageName, r.type, r.no,
+                     r.dueDate, r.amount, r.amountPaid, r.amountOutstanding, r.status,
+                     r.collectedBy, r.xeroInvoiceId, r.programCode, r.oppId]),
+      `accounts-instalments-${TODAY}.csv`
+    );
+    return;
+  }
+
+  const out = [];
+  stages.forEach(st => {
+    sortOpps(st._opps).forEach(o => {
+      out.push([st.order, st.name, o.studentName, o.contactEmail, o.programOfferName, o.programCode,
+                o.paymentModel, o.hasPlan ? 'yes' : 'no', o.installmentCount,
+                o.invoices.invoiced, o.invoices.notInvoiced, o.nextDueDate,
+                o.totals.expected, o.totals.paid, o.totals.outstanding,
+                o.totals.overdueAmount, o.oppId]);
+    });
+  });
+
+  toCSV(
+    ['Stage #','Stage','Student','Email','Program Offer','Program Code','Payment Model','Has Plan',
+     'Instalments','Invoiced','Not Invoiced','Next Due','Expected','Paid','Outstanding','Overdue','Opportunity ID'],
+    out,
+    `accounts-by-stage-${TODAY}.csv`
+  );
 }
 </script>
 </body>
